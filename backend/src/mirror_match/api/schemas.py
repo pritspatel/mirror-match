@@ -64,6 +64,9 @@ SourceConfig = Annotated[
 class CompareOptions(BaseModel):
     ignore_paths: list[str] = Field(default_factory=list)
     array_as_set: bool = False
+    array_keys: dict[str, str] = Field(default_factory=dict)
+    numeric_tolerance: float = 0.0
+    case_insensitive: bool = False
 
 
 class CompareRequest(BaseModel):

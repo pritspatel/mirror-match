@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SourceForm } from "./components/SourceForm";
 import { DiffView } from "./components/DiffView";
 import { DiffTree } from "./components/DiffTree";
-import { compareJson, downloadCsv, downloadHtml } from "./api/client";
+import {
+  compareJson,
+  downloadCsv,
+  downloadHtml,
+  fetchJob,
+  jobCsvUrl,
+  jobHtmlUrl,
+} from "./api/client";
 import type {
   ComparePayload,
   CompareResponse,
@@ -22,6 +29,11 @@ const SAMPLE_B = `{
 
 type ViewMode = "flat" | "tree";
 
+function readJobFromHash(): string | null {
+  const m = window.location.hash.match(/^#\/jobs\/([^/]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
 export default function App() {
   const [sourceA, setSourceA] = useState<SourceConfig>({
     type: "raw",
@@ -37,10 +49,37 @@ export default function App() {
   const [rawTextB, setRawTextB] = useState(SAMPLE_B);
   const [arrayAsSet, setArrayAsSet] = useState(false);
   const [ignorePaths, setIgnorePaths] = useState("");
+  const [arrayKeysText, setArrayKeysText] = useState("");
+  const [numericTolerance, setNumericTolerance] = useState("0");
+  const [caseInsensitive, setCaseInsensitive] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("flat");
   const [result, setResult] = useState<CompareResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const jobId = readJobFromHash();
+    if (!jobId) return;
+    setBusy(true);
+    fetchJob(jobId)
+      .then(setResult)
+      .catch((e) => setError((e as Error).message))
+      .finally(() => setBusy(false));
+  }, []);
+
+  function parseArrayKeys(text: string): Record<string, string> {
+    const out: Record<string, string> = {};
+    text
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((pair) => {
+        const [pointer, field] = pair.split("=");
+        if (pointer && field) out[pointer] = field;
+      });
+    return out;
+  }
 
   function buildPayload(): ComparePayload | string {
     const resolve = (s: SourceConfig, rawText: string): SourceConfig | string => {
@@ -59,10 +98,17 @@ export default function App() {
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
+    const tol = Number.parseFloat(numericTolerance);
     return {
       source_a: a,
       source_b: b,
-      options: { array_as_set: arrayAsSet, ignore_paths: ignore },
+      options: {
+        array_as_set: arrayAsSet,
+        ignore_paths: ignore,
+        array_keys: parseArrayKeys(arrayKeysText),
+        numeric_tolerance: Number.isFinite(tol) ? tol : 0,
+        case_insensitive: caseInsensitive,
+      },
     };
   }
 
@@ -72,7 +118,9 @@ export default function App() {
     if (typeof payload === "string") return setError(payload);
     setBusy(true);
     try {
-      setResult(await compareJson(payload));
+      const res = await compareJson(payload);
+      setResult(res);
+      window.history.replaceState(null, "", `#/jobs/${res.job_id}`);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -82,6 +130,11 @@ export default function App() {
 
   async function runExport(kind: "csv" | "html") {
     setError(null);
+    if (result?.job_id) {
+      const url = kind === "csv" ? jobCsvUrl(result.job_id) : jobHtmlUrl(result.job_id);
+      window.open(url, "_blank");
+      return;
+    }
     const payload = buildPayload();
     if (typeof payload === "string") return setError(payload);
     setBusy(true);
@@ -95,11 +148,23 @@ export default function App() {
     }
   }
 
+  async function copyShareLink() {
+    if (!result?.job_id) return;
+    const url = `${window.location.origin}${window.location.pathname}#/jobs/${result.job_id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setError("clipboard unavailable");
+    }
+  }
+
   return (
     <div className="app">
       <header>
         <h1>MirrorMatch</h1>
-        <span className="meta">v0.2 · raw · HTTP · Elasticsearch</span>
+        <span className="meta">v1.0 · raw · HTTP · Elasticsearch</span>
       </header>
       <main>
         <div className="editors">
@@ -128,13 +193,29 @@ export default function App() {
           <button className="secondary" onClick={() => runExport("html")} disabled={busy}>
             Export HTML
           </button>
+          <button
+            className="secondary"
+            onClick={copyShareLink}
+            disabled={!result?.job_id || busy}
+            title={result?.job_id ? `Share job ${result.job_id}` : "Run a compare first"}
+          >
+            {copied ? "Copied!" : "Share link"}
+          </button>
           <label className="checkbox">
             <input
               type="checkbox"
               checked={arrayAsSet}
               onChange={(e) => setArrayAsSet(e.target.checked)}
             />
-            Treat arrays as sets
+            Arrays as sets
+          </label>
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              checked={caseInsensitive}
+              onChange={(e) => setCaseInsensitive(e.target.checked)}
+            />
+            Case-insensitive
           </label>
           <label className="checkbox">
             Ignore paths:
@@ -143,6 +224,25 @@ export default function App() {
               value={ignorePaths}
               placeholder="/meta/ts,/cache"
               onChange={(e) => setIgnorePaths(e.target.value)}
+            />
+          </label>
+          <label className="checkbox">
+            Array keys:
+            <input
+              type="text"
+              value={arrayKeysText}
+              placeholder="/items=id,/users=uuid"
+              onChange={(e) => setArrayKeysText(e.target.value)}
+            />
+          </label>
+          <label className="checkbox">
+            Num tol:
+            <input
+              type="number"
+              step="0.0001"
+              value={numericTolerance}
+              onChange={(e) => setNumericTolerance(e.target.value)}
+              style={{ width: "6rem" }}
             />
           </label>
           <div className="view-toggle">

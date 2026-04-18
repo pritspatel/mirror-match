@@ -11,7 +11,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from .. import __version__
 from ..diff.models import FieldChange
 
-BADGES = {"ADDED": "+", "REMOVED": "−", "MODIFIED": "~"}
+BADGES = {"ADDED": "+", "REMOVED": "-", "MODIFIED": "~"}
 
 
 def _fmt(value: Any) -> str:

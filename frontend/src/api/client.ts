@@ -41,3 +41,17 @@ async function downloadBlob(
 
 export const downloadCsv = (p: ComparePayload) => downloadBlob("/api/v1/compare.csv", p, "csv");
 export const downloadHtml = (p: ComparePayload) => downloadBlob("/api/v1/compare.html", p, "html");
+
+export async function fetchJob(jobId: string): Promise<CompareResponse> {
+  const res = await fetch(`${BASE}/api/v1/jobs/${encodeURIComponent(jobId)}`);
+  if (!res.ok) throw new Error(`job ${jobId} not found: ${res.status}`);
+  return res.json();
+}
+
+export function jobCsvUrl(jobId: string): string {
+  return `${BASE}/api/v1/jobs/${encodeURIComponent(jobId)}/csv`;
+}
+
+export function jobHtmlUrl(jobId: string): string {
+  return `${BASE}/api/v1/jobs/${encodeURIComponent(jobId)}/html`;
+}

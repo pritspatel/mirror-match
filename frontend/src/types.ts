@@ -75,10 +75,19 @@ export type SourceKind = SourceConfig["type"];
 export interface ComparePayload {
   source_a: SourceConfig;
   source_b: SourceConfig;
-  options?: { ignore_paths?: string[]; array_as_set?: boolean };
+  options?: {
+    ignore_paths?: string[];
+    array_as_set?: boolean;
+    array_keys?: Record<string, string>;
+    numeric_tolerance?: number;
+    case_insensitive?: boolean;
+  };
 }
 
 export interface CompareOptions {
   ignore_paths: string[];
   array_as_set: boolean;
+  array_keys: Record<string, string>;
+  numeric_tolerance: number;
+  case_insensitive: boolean;
 }
