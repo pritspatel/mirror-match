@@ -11,13 +11,13 @@ from . import __version__
 from .api.routes_compare import router as compare_router
 
 app = FastAPI(
-    title="JSONDiff",
+    title="MirrorMatch",
     version=__version__,
     description="Field-level JSON comparison tool",
 )
 
 _cors_origins = os.environ.get(
-    "JSONDIFF_CORS_ORIGINS",
+    "MIRROR_MATCH_CORS_ORIGINS",
     "http://localhost:5173,http://127.0.0.1:5173",
 ).split(",")
 

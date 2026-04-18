@@ -32,7 +32,7 @@ async function downloadBlob(
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `jsondiff-${new Date().toISOString().replace(/[:.]/g, "-")}.${filenameExt}`;
+  a.download = `mirror-match-${new Date().toISOString().replace(/[:.]/g, "-")}.${filenameExt}`;
   document.body.appendChild(a);
   a.click();
   a.remove();

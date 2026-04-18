@@ -1,4 +1,4 @@
-# JSONDiff
+# MirrorMatch
 
 Open-source, field-level JSON comparison tool with interactive web UI and CSV/HTML exports.
 
@@ -24,7 +24,7 @@ Outputs:
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-uvicorn jsondiff.main:app --reload --port 8000
+uvicorn mirror_match.main:app --reload --port 8000
 ```
 
 Open http://localhost:8000/docs for the interactive OpenAPI UI.

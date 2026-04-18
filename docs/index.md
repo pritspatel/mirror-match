@@ -1,10 +1,10 @@
-# JSONDiff
+# MirrorMatch
 
 Open-source, field-level JSON comparison tool with an interactive web UI and CSV / HTML exports.
 
 ## Why
 
-Teams comparing payloads across environments (staging vs prod), across Elasticsearch index versions, or across API revisions usually stitch together `jq`, `diff`, and ad-hoc scripts. JSONDiff replaces that with a single tool: three input modes, deterministic JSON-Pointer-keyed diffs, and sharable reports.
+Teams comparing payloads across environments (staging vs prod), across Elasticsearch index versions, or across API revisions usually stitch together `jq`, `diff`, and ad-hoc scripts. MirrorMatch replaces that with a single tool: three input modes, deterministic JSON-Pointer-keyed diffs, and sharable reports.
 
 ## Features (v0.2)
 

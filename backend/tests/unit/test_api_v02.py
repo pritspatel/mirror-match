@@ -6,7 +6,7 @@ import httpx
 import respx
 from fastapi.testclient import TestClient
 
-from jsondiff.main import app
+from mirror_match.main import app
 
 client = TestClient(app)
 

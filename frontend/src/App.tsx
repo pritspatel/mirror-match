@@ -98,7 +98,7 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <h1>JSONDiff</h1>
+        <h1>MirrorMatch</h1>
         <span className="meta">v0.2 · raw · HTTP · Elasticsearch</span>
       </header>
       <main>

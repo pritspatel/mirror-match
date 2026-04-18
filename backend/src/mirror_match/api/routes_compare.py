@@ -104,7 +104,7 @@ async def compare_endpoint(req: CompareRequest) -> CompareResponse:
 async def compare_csv_endpoint(req: CompareRequest) -> Response:
     timestamp, a_id, b_id, changes = await _run_compare(req)
     body = to_csv(changes, source_a_id=a_id, source_b_id=b_id, timestamp=timestamp)
-    filename = f"jsondiff-{timestamp}.csv"
+    filename = f"mirror-match-{timestamp}.csv"
     return Response(
         content=body,
         media_type="text/csv",
@@ -123,7 +123,7 @@ async def compare_html_endpoint(req: CompareRequest) -> Response:
         timestamp=timestamp,
         summary=summary,
     )
-    filename = f"jsondiff-{timestamp}.html"
+    filename = f"mirror-match-{timestamp}.html"
     return Response(
         content=body,
         media_type="text/html",

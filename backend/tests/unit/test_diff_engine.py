@@ -1,7 +1,7 @@
 """Tests for the diff engine."""
 
-from jsondiff.diff.engine import compare
-from jsondiff.diff.models import ChangeType, FieldChange
+from mirror_match.diff.engine import compare
+from mirror_match.diff.models import ChangeType, FieldChange
 
 
 def _by_path(changes: list[FieldChange]) -> dict[str, FieldChange]:
@@ -144,7 +144,7 @@ def test_empty_array_vs_populated():
 
 
 def test_summary_counts():
-    from jsondiff.diff.engine import summarize
+    from mirror_match.diff.engine import summarize
 
     a = {"a": 1, "b": 2}
     b = {"a": 9, "c": 3}

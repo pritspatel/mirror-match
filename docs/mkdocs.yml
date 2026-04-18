@@ -1,6 +1,6 @@
-site_name: JSONDiff
+site_name: MirrorMatch
 site_description: Field-level JSON comparison tool — docs
-repo_url: https://github.com/your-org/jsondiff
+repo_url: https://github.com/your-org/mirror-match
 theme:
   name: material
   features:

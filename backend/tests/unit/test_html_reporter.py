@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from jsondiff.diff.models import ChangeType, FieldChange
-from jsondiff.reporters.html import to_html
+from mirror_match.diff.models import ChangeType, FieldChange
+from mirror_match.reporters.html import to_html
 
 
 def test_html_report_contains_required_sections():
@@ -19,7 +19,7 @@ def test_html_report_contains_required_sections():
         summary={"added": 1, "removed": 0, "modified": 1, "total": 2},
     )
     assert "<!doctype html>" in html.lower()
-    assert "JSONDiff Report" in html
+    assert "MirrorMatch Report" in html
     assert "prod" in html and "stg" in html
     assert "2026-04-18T00:00:00+00:00" in html
     assert "/x" in html and "/z" in html

@@ -6,7 +6,7 @@ import httpx
 import pytest
 import respx
 
-from jsondiff.adapters.http import HttpAdapter, HttpAuth
+from mirror_match.adapters.http import HttpAdapter, HttpAuth
 
 
 @respx.mock

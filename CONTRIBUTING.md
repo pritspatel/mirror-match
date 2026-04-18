@@ -1,6 +1,6 @@
-# Contributing to JSONDiff
+# Contributing to MirrorMatch
 
-Thanks for considering a contribution. JSONDiff is MIT-licensed and welcomes issues, discussion, and pull requests.
+Thanks for considering a contribution. MirrorMatch is MIT-licensed and welcomes issues, discussion, and pull requests.
 
 ## Ground rules
 
@@ -40,7 +40,7 @@ pnpm build
 
 ## Reporting bugs
 
-Include: reproduction steps, expected vs actual, JSONDiff version, OS/Python/Node versions.
+Include: reproduction steps, expected vs actual, MirrorMatch version, OS/Python/Node versions.
 
 ## Security
 

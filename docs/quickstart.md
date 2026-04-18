@@ -3,7 +3,7 @@
 ## Docker (recommended)
 
 ```bash
-git clone <repo-url> jsondiff && cd jsondiff
+git clone <repo-url> mirror-match && cd mirror-match
 docker compose up --build
 ```
 
@@ -18,7 +18,7 @@ docker compose up --build
 cd backend
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-uvicorn jsondiff.main:app --reload --port 8000
+uvicorn mirror_match.main:app --reload --port 8000
 pytest -q
 ```
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
-from jsondiff.adapters.elasticsearch import EsAdapter
+from mirror_match.adapters.elasticsearch import EsAdapter
 
 
 def _fake_client_factory(*, get_body=None, search_body=None):

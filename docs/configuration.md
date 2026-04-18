@@ -4,7 +4,7 @@
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `JSONDIFF_CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Comma-separated list of CORS-allowed origins. |
+| `MIRROR_MATCH_CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Comma-separated list of CORS-allowed origins. |
 
 ## Compare options
 

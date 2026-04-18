@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>JSONDiff Report — {{ timestamp }}</title>
+<title>MirrorMatch Report — {{ timestamp }}</title>
 <style>
   :root {
     --bg: #0f172a; --panel: #1e293b; --border: #334155;
@@ -40,7 +40,7 @@
 </head>
 <body>
 <header>
-  <h1>JSONDiff Report</h1>
+  <h1>MirrorMatch Report</h1>
   <div class="meta">
     <div>Generated: {{ timestamp }}</div>
     <div>Source A: <code>{{ source_a_id }}</code></div>
@@ -82,6 +82,6 @@
 <div class="empty">No differences. Documents are identical.</div>
 {% endif %}
 
-<footer>JSONDiff v{{ version }} · MIT License</footer>
+<footer>MirrorMatch v{{ version }} · MIT License</footer>
 </body>
 </html>
