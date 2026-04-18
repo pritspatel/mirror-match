@@ -56,3 +56,47 @@ def test_store_survives_reopen(tmp_path: Path):
     store_a.put(_sample_record("persist-me"))
     store_b = SqliteJobStore(path)
     assert store_b.get("persist-me") is not None
+
+
+def test_persisted_request_is_redacted(tmp_path: Path, monkeypatch):
+    """E2E: secrets in the submitted request must not survive to the DB."""
+    import respx
+    from fastapi.testclient import TestClient
+
+    from mirror_match import config as cfg
+    from mirror_match.api.redact import REDACTED
+    from mirror_match.main import app
+
+    db = tmp_path / "jobs.db"
+    monkeypatch.setenv("MIRROR_MATCH_DB_PATH", str(db))
+    cfg.reset_job_store_cache()
+    client = TestClient(app)
+
+    with respx.mock:
+        respx.get("https://api.example.com/a").respond(200, json={"ok": 1})
+        respx.get("https://api.example.com/b").respond(200, json={"ok": 2})
+        payload = {
+            "source_a": {
+                "type": "http",
+                "url": "https://api.example.com/a",
+                "auth": {"kind": "bearer", "token": "LEAKED-TOKEN"},
+                "headers": {"X-API-Key": "HEADER-TOKEN"},
+            },
+            "source_b": {
+                "type": "http",
+                "url": "https://api.example.com/b",
+                "auth": {"kind": "basic", "username": "svc", "password": "pw"},
+                "headers": {},
+            },
+        }
+        resp = client.post("/api/v1/compare", json=payload)
+        assert resp.status_code == 200, resp.text
+        job_id = resp.json()["job_id"]
+
+    record = SqliteJobStore(db).get(job_id)
+    assert record is not None
+    blob = str(record.request)
+    assert "LEAKED-TOKEN" not in blob
+    assert "HEADER-TOKEN" not in blob
+    assert "pw" not in blob
+    assert REDACTED in blob

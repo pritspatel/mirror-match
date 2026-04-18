@@ -45,3 +45,13 @@ Include: reproduction steps, expected vs actual, MirrorMatch version, OS/Python/
 ## Security
 
 Report vulnerabilities privately — see [SECURITY.md](SECURITY.md).
+
+## Releases
+
+1. Bump `backend/src/mirror_match/__init__.py`, `backend/pyproject.toml`, and
+   `frontend/package.json` to the new version.
+2. Add a `## [X.Y.Z] — YYYY-MM-DD` section to [CHANGELOG.md](CHANGELOG.md).
+3. `git tag vX.Y.Z && git push origin vX.Y.Z`.
+4. The `release.yml` workflow builds multi-arch Docker images for both
+   services and publishes them to
+   `ghcr.io/<owner>/mirror-match-{backend,frontend}:{X.Y.Z,latest}`.

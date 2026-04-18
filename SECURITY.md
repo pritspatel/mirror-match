@@ -40,7 +40,18 @@ Out of scope:
 
 ## Handling Secrets
 
-MirrorMatch persists the full `CompareRequest` to the job store so jobs can be
-replayed. If you submit credentials (HTTP bearer tokens, ES API keys) they
-**will** be written to SQLite. Treat the DB file as sensitive and rotate any
-credential that has appeared in a shared job.
+MirrorMatch persists the `CompareRequest` to the job store so jobs can be
+replayed via permalinks. Before writing, the request is scrubbed:
+
+- HTTP / ES auth fields (`token`, `api_key`, `username`, `password`) are
+  replaced with `***REDACTED***`.
+- Sensitive header names (`Authorization`, `Proxy-Authorization`, `Cookie`,
+  `X-API-Key`, case-insensitive) are redacted.
+
+The raw secret is still used for the live `fetch` call — only the persisted
+copy is scrubbed. Logs never include secrets.
+
+Still, treat the job-store file as sensitive: it contains source URLs, host
+names, and any non-redacted header a user adds. If you use custom header names
+for auth, open an issue or extend `_SENSITIVE_HEADER_NAMES` in
+`backend/src/mirror_match/api/redact.py`.

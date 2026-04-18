@@ -19,6 +19,7 @@ from ..diff.normalize import as_set
 from ..reporters.csv import to_csv
 from ..reporters.html import to_html
 from ..store.base import JobRecord
+from .redact import redact_request
 from .schemas import (
     CompareRequest,
     CompareResponse,
@@ -101,7 +102,7 @@ async def _run_compare(
         source_b_id=loaded_b.identifier,
         summary=summarize(changes),
         changes=changes,
-        request=req.model_dump(mode="json"),
+        request=redact_request(req.model_dump(mode="json")),
     )
     get_job_store().put(record)
     return job_id, timestamp, loaded_a.identifier, loaded_b.identifier, changes

@@ -5,7 +5,8 @@
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `MIRROR_MATCH_CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Comma-separated list of CORS-allowed origins. |
-| `MIRROR_MATCH_DB_PATH` | `mirror-match.db` | SQLite file for the persistent job store. Parent directories are created on startup. |
+| `MIRROR_MATCH_DB_PATH` | `mirror-match.db` | SQLite file for the persistent job store. Parent directories are created on startup. Ignored when `MIRROR_MATCH_DB_URL` is set to a Postgres DSN. |
+| `MIRROR_MATCH_DB_URL` | _(unset)_ | Postgres DSN (`postgresql://user:pw@host:5432/db`). Requires installing the `postgres` extra: `pip install 'mirror-match[postgres]'`. |
 | `MIRROR_MATCH_AUTH_TOKEN` | _(unset)_ | When set, every route except `/api/v1/healthz`, `/metrics`, and `/docs` requires `Authorization: Bearer <token>`. |
 
 ## Compare options
