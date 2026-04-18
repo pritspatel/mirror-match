@@ -44,4 +44,4 @@ Include: reproduction steps, expected vs actual, MirrorMatch version, OS/Python/
 
 ## Security
 
-Report vulnerabilities privately — see [SECURITY.md](SECURITY.md) (to be added in v0.2).
+Report vulnerabilities privately — see [SECURITY.md](SECURITY.md).
