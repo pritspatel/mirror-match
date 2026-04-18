@@ -14,7 +14,7 @@ function fmt(value: unknown): string {
 
 export function DiffView({ result }: { result: CompareResponse | null }) {
   if (!result) {
-    return <div className="empty">Paste JSON into both panes, then Compare.</div>;
+    return <div className="empty">Configure sources, then Compare.</div>;
   }
   if (result.changes.length === 0) {
     return <div className="empty">No differences. Documents are identical.</div>;

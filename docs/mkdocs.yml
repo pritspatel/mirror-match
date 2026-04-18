@@ -1,0 +1,25 @@
+site_name: JSONDiff
+site_description: Field-level JSON comparison tool — docs
+repo_url: https://github.com/your-org/jsondiff
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.sections
+    - content.code.copy
+  palette:
+    - scheme: slate
+      primary: blue
+      accent: light blue
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Configuration: configuration.md
+  - Adapters: adapters.md
+  - API reference: api.md
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - toc:
+      permalink: true

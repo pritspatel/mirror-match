@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>JSONDiff Report — {{ timestamp }}</title>
+<style>
+  :root {
+    --bg: #0f172a; --panel: #1e293b; --border: #334155;
+    --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+    --added-bg: #052e16; --added-fg: #4ade80;
+    --removed-bg: #450a0a; --removed-fg: #f87171;
+    --modified-bg: #422006; --modified-fg: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--text); }
+  header { padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--panel); }
+  h1 { margin: 0; font-size: 20px; }
+  .meta { color: var(--muted); margin-top: 6px; font-size: 13px; }
+  .summary { display: flex; gap: 18px; padding: 10px 24px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .summary .added { color: var(--added-fg); }
+  .summary .removed { color: var(--removed-fg); }
+  .summary .modified { color: var(--modified-fg); }
+  table { width: 100%; border-collapse: collapse; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--panel); color: var(--muted); font-weight: 600; position: sticky; top: 0; }
+  tr.ADDED    td { background: var(--added-bg); }
+  tr.REMOVED  td { background: var(--removed-bg); }
+  tr.MODIFIED td { background: var(--modified-bg); }
+  td.badge { width: 28px; text-align: center; font-weight: 700; }
+  tr.ADDED    .badge { color: var(--added-fg); }
+  tr.REMOVED  .badge { color: var(--removed-fg); }
+  tr.MODIFIED .badge { color: var(--modified-fg); }
+  td.path { color: var(--accent); }
+  td.value { white-space: pre-wrap; word-break: break-word; }
+  td.old { color: var(--removed-fg); }
+  td.new { color: var(--added-fg); }
+  .empty { padding: 30px 24px; color: var(--muted); font-style: italic; }
+  footer { padding: 12px 24px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<header>
+  <h1>JSONDiff Report</h1>
+  <div class="meta">
+    <div>Generated: {{ timestamp }}</div>
+    <div>Source A: <code>{{ source_a_id }}</code></div>
+    <div>Source B: <code>{{ source_b_id }}</code></div>
+  </div>
+</header>
+
+<div class="summary">
+  <span>Total: <b>{{ summary.total }}</b></span>
+  <span class="added">+{{ summary.added }} added</span>
+  <span class="removed">−{{ summary.removed }} removed</span>
+  <span class="modified">~{{ summary.modified }} modified</span>
+</div>
+
+{% if changes %}
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field Path</th>
+      <th>Change</th>
+      <th>Value in A</th>
+      <th>Value in B</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in changes %}
+    <tr class="{{ c.change_type.value }}">
+      <td class="badge">{{ BADGES[c.change_type.value] }}</td>
+      <td class="path">{{ c.path or "/" }}</td>
+      <td>{{ c.change_type.value }}</td>
+      <td class="value old">{{ fmt(c.value_a) }}</td>
+      <td class="value new">{{ fmt(c.value_b) }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty">No differences. Documents are identical.</div>
+{% endif %}
+
+<footer>JSONDiff v{{ version }} · MIT License</footer>
+</body>
+</html>

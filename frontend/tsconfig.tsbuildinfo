@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/types.ts","./src/api/client.ts","./src/components/diffview.tsx","./src/components/editorpane.tsx"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/types.ts","./src/api/client.ts","./src/components/difftree.tsx","./src/components/diffview.tsx","./src/components/sourceform.tsx"],"version":"5.9.3"}
