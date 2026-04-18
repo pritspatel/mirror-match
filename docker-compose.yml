@@ -1,13 +1,17 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       MIRROR_MATCH_CORS_ORIGINS: "http://localhost:5173,http://localhost:8080"
     ports:
       - "8000:8000"
 
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
     depends_on:
       - backend
     ports:

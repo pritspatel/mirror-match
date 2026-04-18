@@ -5,9 +5,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
+COPY README.md ./README.md
 
-COPY pyproject.toml ./
-COPY src ./src
+WORKDIR /app/backend
+COPY backend/pyproject.toml ./pyproject.toml
+COPY backend/src ./src
 
 RUN pip install --upgrade pip && pip install .
 
