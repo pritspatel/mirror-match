@@ -28,7 +28,7 @@ def es_container():
 def es_client(es_container):
     from elasticsearch import Elasticsearch
 
-    url = es_container.get_url()
+    url = f"http://{es_container.get_container_host_ip()}:{es_container.get_exposed_port(es_container.port)}"
     client = Elasticsearch(hosts=[url], verify_certs=False)
     yield client
     client.close()
@@ -38,7 +38,7 @@ def test_by_id_roundtrip(es_container, es_client):
     es_client.index(index="docs", id="1", document={"name": "Alice", "age": 30}, refresh=True)
 
     adapter = EsAdapter(
-        hosts=[es_container.get_url()],
+        hosts=[f"http://{es_container.get_container_host_ip()}:{es_container.get_exposed_port(es_container.port)}"],
         index="docs",
         mode="by_id",
         doc_id="1",
@@ -56,7 +56,7 @@ def test_query_first_source(es_container, es_client):
     es_client.index(index="docs", id="2", document={"name": "Bob", "age": 40}, refresh=True)
 
     adapter = EsAdapter(
-        hosts=[es_container.get_url()],
+        hosts=[f"http://{es_container.get_container_host_ip()}:{es_container.get_exposed_port(es_container.port)}"],
         index="docs",
         mode="query",
         query={"query": {"term": {"name.keyword": "Bob"}}},
